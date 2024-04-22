@@ -18,7 +18,6 @@ return [
             '2' => 'İptal Edildi',
             '3' => 'Randevu Verildi'
         ],
-
         'types' => [
             '1' => 'Boyasız Onarım',
             '2' => 'Pasta & Cila',

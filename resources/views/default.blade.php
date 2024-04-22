@@ -28,12 +28,6 @@
     <!-- Logo -->
     <link rel="icon" href="/storage/images/logo/logo.png" type="image/x-icon">
 
-    <!-- HTML5 Shiv -->
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-
-    <!-- Respond.js -->
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-
     <!-- jQuery 3 -->
     <script src="/backend/bower_components/jquery/dist/jquery.min.js"></script>
 

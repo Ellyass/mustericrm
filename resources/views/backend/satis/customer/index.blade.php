@@ -111,6 +111,10 @@
                     .custom-select:hover .options {
                         display: block;
                     }
+                    .label-color{
+                        background-color: #6c71c4;
+                        color: #fff;
+                    }
                 </style>
 
                 <div class="page-size-container" style="margin-top: 10px;">
@@ -142,7 +146,7 @@
                         <th>Eklendiği Tarih</th>
                         <th>Müşteri Adı</th>
                         <th>İl</th>
-                        <th>Firma İsmi</th>
+                        <th>Durumu</th>
                         <th>Müşteri Email</th>
                         <th>Müşteri Telefon</th>
                         <th>Notlar</th>
@@ -182,13 +186,26 @@
                                 <td>{{ $customer->created_at->format('d.m.Y') }}</td>
                                 <td>{{ $customer->customer_name }}</td>
                                 <td>{{ $customer->customer_city }}</td>
-                                <td>{{ $customer->customer_company_name }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('customer.Condition', ['id' => $customer->id]) }}">
+                                        @csrf
+                                        <button type="submit" style="border: none; background: none;">
+                                            <span class="label label-color">
+                                                @if( $customer->customer_condition == 1 )
+                                                    Potansiyel
+                                                @elseif( $customer->customer_condition ==2 )
+                                                    Gerçek
+                                                @endif
+                                            </span>
+                                        </button>
+                                    </form>
+                                </td>
                                 <td>{{ $customer->customer_mail }}</td>
                                 <td>+90 {{ $customer->customer_phone }}</td>
                                 <td>
                                     <!--not al bölümü-->
                                     <button type="button" class="btn btn-default fa fa-comment" data-toggle="modal"
-                                            data-target="#{{ $modalId }}"></button>
+                                            data-target="{{ $modalId }}"></button>
                                     <form action="{{ route('not.Post') }}" method="POST">
                                         @csrf
 

@@ -108,6 +108,7 @@
                     <th>Telefon No.</th>
                     <th>Yapılacak İşlem</th>
                     <th>İşlem Görecek Yer</th>
+                    <th>Notlar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -137,6 +138,7 @@
                             @endforeach
                         </td>
 
+                        <td><button type="button" class="btn btn-info fa fa-comment" data-toggle="modal" data-target="#"></button></td>
 
                         <td width="5"><a href="{{ route('onarim.repair.Edit',$repair->id) }}"><i class="glyphicon glyphicon-pencil"></i></a></td>
                         <td width="5">

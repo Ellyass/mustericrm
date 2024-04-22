@@ -97,7 +97,7 @@ class CustomerController extends Controller
         $product = Product::all();
         $pro = Product::all();
         $sales = Sales::all();
-        $callExplanation = CallExplanation::orderBy('id','desc')->where('customer_id', $id)->get();
+        $callExplanation = CallExplanation::orderBy('id', 'desc')->where('customer_id', $id)->get();
 
         return view('backend.satis.customer.edit')
             ->with('customer', $customer)
@@ -107,7 +107,6 @@ class CustomerController extends Controller
             ->with('sales', $sales)
             ->with('pro', $pro)
             ->with('customer_id', $musteriler);
-
     }
 
 
@@ -137,14 +136,11 @@ class CustomerController extends Controller
 
         if ($request->customer_status == '1') {
             $customer->update(['customer_meet' => null]);
-        }
-        elseif ($request->customer_status == '2') {
+        } elseif ($request->customer_status == '2') {
             $customer->update(['customer_meet' => null]);
-        }
-        elseif ($request->customer_status == '3') {
+        } elseif ($request->customer_status == '3') {
             $customer->update(['customer_meet' => null]);
-        }
-        elseif ($request->customer_status == '4') {
+        } elseif ($request->customer_status == '4') {
             $customer->update(['customer_cancel' => null]);
         }
 
@@ -184,7 +180,7 @@ class CustomerController extends Controller
         ]);
         $id = $request->customer_id;
 
-        return redirect(route('customer.Edit', ['id' => $id]))->with('success','İşlem Başarılı');
+        return redirect(route('customer.Edit', ['id' => $id]))->with('success', 'İşlem Başarılı');
     }
 
 
@@ -193,12 +189,12 @@ class CustomerController extends Controller
         $post = Customer::find($id);
 
         if (!$post) {
-            return redirect()->route('customer.Index')->with('error', 'Kayıt bulunamadı.');
+            return back()->with('error', 'Kayıt bulunamadı.');
         }
 
         $post->delete();
 
-        return redirect()->route('customer.Index')->with('success', 'Kayıt başarıyla silindi.');
+        return back()->with('success', 'Kayıt başarıyla silindi.');
     }
 
 
@@ -275,7 +271,6 @@ class CustomerController extends Controller
     }
 
 
-
     public function tumu()
     {
         $pageSize = session('page_size', 15);
@@ -286,7 +281,7 @@ class CustomerController extends Controller
             session(['page_size' => $pageSize]);
         }
 
-        $data['customer'] = Customer::orderBy('id','desc')->paginate($pageSize);
+        $data['customer'] = Customer::orderBy('id', 'desc')->paginate($pageSize);
         return view('backend.satis.customer.index', compact('data'));
     }
 
@@ -364,7 +359,7 @@ class CustomerController extends Controller
         }
         $xls = $excel->rows();
         unset($xls[0]);
-        foreach (array_values($xls) as $user){
+        foreach (array_values($xls) as $user) {
 
             $customer_company_name = trim($user[1]) !== '' ? $user[1] : null;
             $customer_official = trim($user[2]) !== '' ? $user[2] : null;
@@ -379,7 +374,7 @@ class CustomerController extends Controller
                 'customer_official' => $customer_official,
                 'customer_mail' => $customer_mail,
                 'customer_city' => $user[4],
-                'customer_address' =>  $customer_address,
+                'customer_address' => $customer_address,
                 'customer_phone' => $user[6],
                 'customer_phone_home' => $customer_phone_home,
                 'customer_url' => $customer_url,
@@ -392,5 +387,26 @@ class CustomerController extends Controller
         }
 
         return redirect('customer/home')->with('success', 'Tablo başarıyla Yüklendi.');
+    }
+
+    public function condition(Request $request , $id)
+    {
+        $customer = Customer::find($id);
+
+        if (!$customer) {
+            return back()->with('error', 'Müşteri bulunamadı');
+        }
+
+        $customerCondition = $customer->customer_condition == 1 ? 2 : 1;
+
+        $customer->update([
+            "customer_condition" => $customerCondition
+        ]);
+
+        if ($customer) {
+            return back()->with('success', 'İşlem Başarılı');
+        }
+
+        return back()->with('error', 'İşlem Başarısız');
     }
 }

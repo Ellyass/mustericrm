@@ -56,7 +56,7 @@ Route::middleware(['admin'])->group(function () {
             Route::get('/customer/ımport', 'CustomerController@import')->name('customer.Import');
             Route::post('/customer/import/store', 'CustomerController@importStore')->name('customer.import.Store');
             Route::post('/not_post', 'CustomerController@callExplanation')->name('not.Post');
-
+            Route::post('/customer/condition/{id}', 'CustomerController@condition')->name('customer.Condition');
         });
     });
 });
@@ -179,7 +179,7 @@ Route::middleware(['admin'])->group(function () {
             Route::get('/edit/{id}', 'RepairCustomerController@edit')->name('onarim.repair.Edit');
             Route::post('/update/{id}', 'RepairCustomerController@update')->name('onarim.repair.Update');
             Route::get('/delete/{id}', 'RepairCustomerController@destroy')->name('onarim.repair.Delete');
-            Route::post('/not-post/{id}', 'RepairCustomerController@call')->name('onarim.not.Post');
+            Route::post('/not-post', 'RepairCustomerController@call')->name('onarim.not.Post');
         });
     });
 });
