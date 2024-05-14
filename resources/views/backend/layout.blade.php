@@ -14,7 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/backend/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/backend/bower_components/font-awesome/css/font-awesome.min.css">
@@ -43,13 +43,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Custom Styles -->
     <link rel="stylesheet" href="/backend/custom/css/custom.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
 
-    <!-- FullCalendar -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css" rel="stylesheet">
 
     <!-- Logo -->
-    <link rel="icon" href="/storage/images/logo/logo.png" type="image/x-icon">
+    <link rel="icon" href="/public/storage/images/logo/logo.png" type="image/x-icon">
 
     <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>

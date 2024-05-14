@@ -48,9 +48,9 @@
 
             <div class="box-body">
                 <form>
-                    <div id="box">
+                    <div id="box" style="margin-top: 10px">
                         <i class="fa fa-search"></i>
-                        <input type="text" id="search" class="search" placeholder="Ara..">
+                        <input type="text" id="search" class="search" placeholder="Ara.." >
                     </div>
                 </form>
 
@@ -117,7 +117,7 @@
                     }
                 </style>
 
-                <div class="page-size-container" style="margin-top: 10px;">
+                <div class="page-size-container" style="margin-top: 15px;">
                     <label for="page-size">Satır Sayısı :</label>
                     <div class="custom-select">
                         <span id="selected-size">{{ $data['customer']->perPage() }}</span>
@@ -154,7 +154,7 @@
                         <th></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="table-body">
                     <!--
                     1-Yeni kullanıcı
                     2-Kabul edildi
@@ -200,7 +200,7 @@
                                         </button>
                                     </form>
                                 </td>
-                                <td>{{ $customer->customer_mail }}</td>
+                                <td>{{ $customer->customer_mail ? $customer->customer_mail : "E-posta yok" }}</td>
                                 <td>+90 {{ $customer->customer_phone }}</td>
                                 <td>
                                     <!--not al bölümü-->
@@ -346,17 +346,111 @@
 
 
     <script>
-        var $rows = $('#paginationNumber tr');
-        $('#search').keyup(function () {
-            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        function formatDate(dateString) {
+            var options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return new Date(dateString).toLocaleDateString('tr-TR', options);
+        }
 
-            $rows.show().filter(function () {
-                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                return !~text.indexOf(val);
-            }).hide();
+        $('#search').keyup(function () {
+            var query = $(this).val();
+            $.ajax({
+                url: '{{ route('search') }}',
+                type: 'GET',
+                data: { search: query },
+                success: function(data) {
+                    var tableContent = '';
+                    if(data.length > 0) {
+                        data.forEach(function(customer, index) {
+                            var userId = {{ auth()->user()->id }};
+                            var addedById = customer.added_by_user_id;
+                            var modalId = 'exampleModal_' + customer.id;
+                            var bgColor = '';
+
+                            if(customer.customer_status == 1) {
+                                bgColor = 'background-color: #C0C0C0';
+                            } else if(customer.customer_status == 2) {
+                                bgColor = 'background-color: #39FF14';
+                            } else if(customer.customer_status == 3) {
+                                bgColor = 'background-color: #FF2400';
+                            } else if(customer.customer_status == 4) {
+                                bgColor = 'background-color: #FDFD96';
+                            }
+
+                            if({{ Auth::user()->role == 'admin' }} || userId == addedById) {
+                                tableContent += '<tr style="' + bgColor + '">' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + formatDate(customer.created_at) + '</td>' +
+                                    '<td>' + customer.customer_name + '</td>' +
+                                    '<td>' + customer.customer_city + '</td>' +
+                                    '<td>' +
+                                    '<form method="POST" action="/customer/condition/' + customer.id + '">' +
+                                    '@csrf' +
+                                    '<button type="submit" style="border: none; background: none;">' +
+                                    '<span class="label label-color">' +
+                                    (customer.customer_condition == 1 ? 'Potansiyel' : 'Gerçek') +
+                                    '</span>' +
+                                    '</button>' +
+                                    '</form>' +
+                                    '</td>' +
+                                    '<td>' + (customer.customer_mail ? customer.customer_mail : 'E-posta yok') + '</td>' +
+                                    '<td>+90 ' + customer.customer_phone + '</td>' +
+                                    '<td>' +
+                                    '<button type="button" class="btn btn-default fa fa-comment" data-toggle="modal" data-target="#' + modalId + '"></button>' +
+                                    '<form action="/not/post" method="POST">' +
+                                    '@csrf' +
+                                    '<input type="hidden" name="customer_id" value="' + customer.id + '">' +
+                                    '<div class="modal fade" id="' + modalId + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                                    '<div class="modal-dialog" role="document">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                    '<h4 class="modal-title" align="center" id="exampleModalLabel"><strong>Arama Notları</strong></h4>' +
+                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '<textarea name="call_explanation" id="call_explanation" cols="73" rows="1"></textarea>' +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>' +
+                                    '<button type="submit" class="btn btn-primary">Kaydet</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</form>' +
+                                    '</td>' +
+                                    '<td style="padding-right: 4px;">' +
+                                    '<a href="/customer/edit/' + customer.id + '">' +
+                                    '<button type="button" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-pencil "></span></button>' +
+                                    '</a>' +
+                                    '</td>' +
+                                    '<td style="padding-left: 1px;">' +
+                                    '<button type="button" class="btn btn-danger btn-xs" id="delete_buton" onclick="confirmDelete(\'/customer/delete/' + customer.id + '\')">' +
+                                    '<span class="fa fa-trash"></span>' +
+                                    '</button>' +
+                                    '</td>' +
+                                    '</tr>';
+                            }
+                        });
+                    } else {
+                        tableContent = '<tr><td colspan="10">Sonuç bulunamadı.</td></tr>';
+                    }
+                    $('#table-body').html(tableContent);
+                }
+            });
         });
     </script>
 
+    {{--    <script>--}}
+    {{--        var $rows = $('#paginationNumber tr');--}}
+    {{--        $('#search').keyup(function () {--}}
+    {{--            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();--}}
+
+    {{--            $rows.show().filter(function () {--}}
+    {{--                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();--}}
+    {{--                return !~text.indexOf(val);--}}
+    {{--            }).hide();--}}
+    {{--        });--}}
+    {{--    </script>--}}
 @endsection
 @section('css')@endsection
 @section('js')@endsection

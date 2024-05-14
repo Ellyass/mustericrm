@@ -139,9 +139,9 @@ Route::get('/calculate-earnings/{id}', function ($id) {
     return view('sales.calculate', ['earnings' => $earnings]);
 });
 
-Route::get('/download-excel', 'App\Http\Controllers\ExcelController@downloadExcel')->name('excel.Download');
-Route::get('/download-excel/table', 'App\Http\Controllers\ExcelController@downloadExcelTable')->name('excel.Table');
-
+Route::get('/download-excel', 'App\Http\Controllers\Satis\ExcelController@downloadExcel')->name('excel.Download');
+Route::get('/download-excel/table', 'App\Http\Controllers\Satis\ExcelController@downloadExcelTable')->name('excel.Table');
+Route::get('/search', 'App\Http\Controllers\Satis\SearchController@search')->name('search');
 
 
 
